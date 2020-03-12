@@ -9,6 +9,25 @@ Users browsing the internet with domain names (for example: www.aws.amazon.com) 
 
 ![VPC with public and private subnets and route tables](https://drive.google.com/uc?id=1M5sdCpHLuyBhpj5Vi6Obz4zQWgr0kPcL)
 
+Follow these Steps from AWS console:
+1. Go to S3 service and create two buckets with unique names ending with code and media.
+2. Got to CloudFront and create Distribution Web based (we are not choosing the RTMP) with Restrict Bucket Access set to No.
+
+![](https://drive.google.com/uc?id=1iinWDITOuNdbsYlUihh1rusKd9KR5I2k)
+
+3. Go to VPC > Security Groups >  Create security group. Create a public subnet security group with inbound rules to allow SSH and HTTP.
+![](https://drive.google.com/uc?id=1Z6JkoNkvuVJcldtXm9XOcBORzA-4lbin)
+
+4. Similarly create a private subnet security group with inbound rule that allows traffic to MYSQL/Aurora port 3306 from Source public security group name.
+
+5. Provision the RDS Database instance by going to RDS > Create database > MySQL > Select Dev/Test template with Burstable classes db.t2.micro with Multi-AZ. Select the database security group in the Additional  connectivity configuration. Provide the DB name inside Additional configuration and disable Enable Enhanced Monitoring. With all other set to default click on create databse.
+
+6. Create a S3forWordPress role to talk to S3 from IAM > Roles > Create Role > AWS Service > EC2 > Attach AmazonS3FullAccess.
+
+7. Provision EC2 instances.
+
+
+
 
 
 

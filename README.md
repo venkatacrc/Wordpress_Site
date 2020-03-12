@@ -9,6 +9,8 @@ Users browsing the internet with domain names (for example: www.aws.amazon.com) 
 
 ![VPC with public and private subnets and route tables](https://drive.google.com/uc?id=1M5sdCpHLuyBhpj5Vi6Obz4zQWgr0kPcL)
 
+## AWS resources setup for the WordPress site
+
 Follow these Steps from AWS console:
 1. Go to S3 service and create two buckets with unique names ending with code and media.
 2. Got to CloudFront and create Distribution Web based (we are not choosing the RTMP) with Restrict Bucket Access set to No.
@@ -24,7 +26,26 @@ Follow these Steps from AWS console:
 
 6. Create a S3forWordPress role to talk to S3 from IAM > Roles > Create Role > AWS Service > EC2 > Attach AmazonS3FullAccess.
 
-7. Provision EC2 instances.
+7. Provision EC2 instances. EC2 > Launch Instance > with IAM role S3forWordPress with Boot strap script. Provide a tag with name MyGoldenImage with WebDMZ security group. 
+```
+#!/bin/bash
+yum update -y
+yum install httpd php php-mysql -y
+cd /var/www/html
+echo "healthy" > healthy.html
+wget https://wordpress.org/wordpress-5.1.1.tar.gz
+tar -xzf wordpress-5.1.1.tar.gz
+cp -r wordpress/* /var/www/html/
+rm -rf wordpress
+rm -rf wordpress-5.1.1.tar.gz
+chmod -R 755 wp-content
+chown -R apache:apache wp-content
+wget https://s3.amazonaws.com/bucketforwordpresslab-donotdelete/htaccess.txt
+mv htaccess.txt .htaccess
+chkconfig httpd on
+service httpd start
+```
+
 
 
 
